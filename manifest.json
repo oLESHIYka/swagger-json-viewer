@@ -1,13 +1,18 @@
 {
-   "manifest_version": 2,
+   "manifest_version": 3,
    "name": "Swagger Result JSON Viewer",
    "version": "0.1",
    "description": "Удобный просмотр JSON в блоке Response body swagger-ui",
    "content_scripts": [
        {
            "matches": [ "<all_urls>" ],
-           "css": [ "css/jquery.json-viewer.css" ],
+           "css": [ "css/jquery.json-viewer.css", "css/main.css" ],
            "js": [ "js/jquery-3.6.0.min.js", "js/jquery.json-viewer.js", "js/main.js" ]
        }
-   ]
+   ],
+   "web_accessible_resources": [
+    {
+      "resources": [ "/icons/*"],
+      "matches": [ "<all_urls>" ]
+    }]
 }
