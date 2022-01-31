@@ -5,6 +5,9 @@ const JSON_VIEWER_BUTTON_BACKGROUND = "url(\"" + JSON_VIEWER_PATH + "\") 50% no-
 
 console.log(JSON_VIEWER_BUTTON_BACKGROUND);
 
+// ====================================================
+// Обработчики нажатий
+
 // Функция ожидает на вход кнопку просмотра JSON'а.
 // Если кнопка не была нажата:
 //   Создаёт объект jsonViewer, если его ещё нет.
@@ -115,8 +118,59 @@ function headerClickHandler(headerElement){
     }, 50);
 }
 
-setTimeout(() => {
-    $(".swagger-ui .opblock .opblock-summary").on("click", function() {
-        headerClickHandler(this);
+// Задание обработчика нажатия на заголовок секции ручек. По нажатию на заголовок звать сканер секции.
+function operationsSectionHandler(block) {
+    console.log('operationsSectionHandler...');
+
+    $(block).find(".opblock-tag").on("click", function() {
+        operationsSectionScanner(block);
     });
+}
+
+// ====================================================
+// Сканеры
+
+// Сканер блока ручки. Задаёт 
+function operationBlockScanner(block) {
+    let blockId = $(block).attr('id');
+
+    $(block).find(".opblock-summary").each(function(idx){
+        headerClickHandler(this); // Добавляем обработчик на заголовок ручки
+    });
+
+    $(block).find(".opblock-body .try-out__btn").each(function(idx){
+        tryItOutClickHandler(blockId, this);
+    });
+}
+
+// Сканер секции ручек. На вход ожидает секцию, сканирует её в поиске блоков ручек.
+// Каждому блоку задаёт обработчик и зовёт сканер блока ручки.
+function operationsSectionScanner(operationsBlock) {
+    console.log('operationsSectionScanner...');
+
+    $(operationBlock).find(".opblock").each(function(idx) {
+        operationBlockHandler(this); // Задаём обработчик нажатия на заголовок ручки
+        operationBlockScanner(this); // Сканируем ручку на предмет наличия конпки Try it out.
+    })
+}
+
+// Сканер верхнего уровня. Сканирует все группы (секции) ручек.
+// Задаёт каждой секции обработчик нажатия и зовёт сканер секции.
+function operationsBlockSectionsScanner() {
+    console.log('operationsBlockSectionsScanner...');
+    $(".swagger-ui .opblock-tag-section").each(function(idx){
+        operationsSectionHandler(this); // Вешаем обработчик нажатия на секцию
+        operationsSectionScanner(this); // Сканируем секцию
+    });
+}
+
+// ====================================================
+// Начальный обход
+
+setTimeout(() => {
+    operationsBlockSectionsScanner();
+
+    // $(".swagger-ui .opblock .opblock-summary").on("click", function() {
+    //     headerClickHandler(this);
+    // });
 }, 500);
