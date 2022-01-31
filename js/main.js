@@ -95,7 +95,7 @@ function tryItOutClickHandler(handleId, button) {
             $("#"+handleId).find("button.execute").on("click", function() {
                 executeClickHandler(handleId, this)
             });
-        }, 50);
+        }, 100);
     }
 
     console.log('Try it out button at ' + handleId + ' clicked. Currently clicked: ' + wasClicked);
@@ -112,7 +112,7 @@ function headerClickHandler(headerElement){
         parent.find(".try-out__btn").on("click", function() {
             tryItOutClickHandler(id, this);
         });
-    }, 50);
+    }, 100);
 }
 
 setTimeout(() => {
