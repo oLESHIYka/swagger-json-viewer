@@ -195,6 +195,24 @@ function operationsBlockSectionsScanner() {
 // ====================================================
 // Начальный обход
 
-setTimeout(() => {
-    operationsBlockSectionsScanner();
-}, 500);
+if ( $("#swagger-ui").length > 0 ) {
+    if ( $(".swagger-ui .opblock-tag-section").length > 0 ) {
+        operationsBlockSectionsScanner();
+    } else {
+        let swaggerBodyObserver = new MutationObserver((records) => {
+            for ( let record of records) {
+                if ( record.target.nodeName === 'DIV' && record.target.classList.contains('swagger-ui') ) {
+                    swaggerBodyObserver.disconnect();
+                    
+                    operationsBlockSectionsScanner();
+                    
+                    break;
+                }
+            }
+        });
+
+        let targetNode = $( "#swagger-ui" ).get(0);
+    
+        swaggerBodyObserver.observe(targetNode, { childList: true, subtree: true });
+    }
+}
